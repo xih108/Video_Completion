@@ -1,0 +1,7 @@
+*.pyc
+logs/
+models/
+results/
+data/
+venv/
+*.avi
