@@ -3,6 +3,8 @@ import tensorflow as tf
 # tf.enable_eager_execution()
 
 import time
+import sys 
+
 from argparse import ArgumentParser
 from os import makedirs
 from os.path import exists
@@ -65,8 +67,12 @@ def average_gradients(tower_grads):
 def train(lr, batch_size, alpha, beta, image_size, K, T, num_iter, gpu):
     with tf.Graph().as_default(), tf.device('/cpu:0'):
         num_gpus = len(gpu)
-        data_path = "../data/KTH/"
-        f = open(data_path + "train_data_list_trimmed.txt", "r")
+        #data_path = "../data/KTH/"
+        #f = open(data_path + "train_data_list_trimmed.txt", "r")
+
+        data_path = "../data/MITD/"
+        f = open(data_path + "eruption_train.txt", "r")
+
         trainfiles = f.readlines()
 
         margin = 0.3
@@ -237,17 +243,14 @@ def train(lr, batch_size, alpha, beta, image_size, K, T, num_iter, gpu):
                             
                             try:
                                 output = parallel(
-                                    delayed(load_kth_data)(f, p, img_sze, k, t)
+                                    delayed(load_data)(f, p, img_sze, k, t, 'MITD')
                                     for f, p, img_sze, k, t in
                                     zip(tfiles, paths, shapes, Ks, Ts))
-                            except IndexError:
+                            except:
                                 continue
-                                print("--------------Index Error--------------")
+                                print("-------------- Skip file --------------")
+                                print(sys.exc_info()[0])
                                 print(tfiles)
-                                print(paths)
-                                print(shapes)
-                                print(Ks)
-                                print(Ts)
                                 print("---------------------------------------")
 
 

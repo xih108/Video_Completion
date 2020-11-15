@@ -87,25 +87,40 @@ def draw_frame(img, is_input):
     return img
 
 
-def load_kth_data(f_name, data_path, image_size, K, T):
+def load_data(f_name, data_path, image_size, K, T, data_name='KTH'):
     flip = np.random.binomial(1, .5, 1)[0]
-    tokens = f_name.split()
-    vid_path = data_path + tokens[0] + "_uncomp.avi"
+    if data_name == 'KTH':
+        tokens = f_name.split()
+        vid_path = data_path + tokens[0] + "_uncomp.avi"
+    elif data_name == 'MITD':
+        vid_path = (data_path + f_name).replace('\n', '')
     print(">>>vid_path", vid_path)
 
     # raise ValueError()
-
     while True:
         try:
             vid = imageio.get_reader(vid_path, "ffmpeg")
             break
-        except Exception:
+        except Exception as e:
+            print(e)
             print(vid_path)
             print("imageio failed loading frames, retrying")
 
+    if data_name == 'KTH':
+        low = int(tokens[1])
+        high = int(np.min([int(tokens[2]), vid.count_frames()]) - K - T + 1)
+    elif data_name == 'MITD':
+        low = 1
+        high = 2
+        for i in range(5): # try 5 times
+            try:
+                high = vid.count_frames() - K - T + 1
+                break
+            except:
+                print(f"Could not get number of frames: {i}")
+
+
     # vid = imageio.get_reader(vid_path, "ffmpeg")
-    low = int(tokens[1])
-    high = int(np.min([int(tokens[2]), vid.get_length()]) - K - T + 1)
     if low == high:
         stidx = 0
     else:
@@ -129,21 +144,21 @@ def load_kth_data(f_name, data_path, image_size, K, T):
     print("------------------------\n") ##adl
     
     
-    print("-------print vid.get_length()------") ##adl
+    print("-------print vid.count_frames()------") ##adl
     import alog ##adl
     from pprint import pprint ##adl
-    alog.info("vid.get_length()") ##adl
-    print(">>> type(vid.get_length()) = ", type(vid.get_length())) ##adl
-    if hasattr(vid.get_length(), "shape"): ##adl
-        print(">>> vid.get_length().shape", vid.get_length().shape) ##adl
-    if type(vid.get_length()) is list: ##adl
-        print(">>> len(vid.get_length()) = ", len(vid.get_length())) ##adl
-        pprint(vid.get_length()) ##adl
+    alog.info("vid.count_frames()") ##adl
+    print(">>> type(vid.count_frames()) = ", type(vid.count_frames())) ##adl
+    if hasattr(vid.count_frames(), "shape"): ##adl
+        print(">>> vid.count_frames().shape", vid.count_frames().shape) ##adl
+    if type(vid.count_frames()) is list: ##adl
+        print(">>> len(vid.count_frames()) = ", len(vid.count_frames())) ##adl
+        pprint(vid.count_frames()) ##adl
     else: ##adl
-        pprint(vid.get_length()) ##adl
+        pprint(vid.count_frames()) ##adl
     print("------------------------\n") ##adl
     
-    
+    """
     var_list = [low, high, stidx] ##adl
     for idx,x in enumerate(var_list): ##adl
         var_names = "low, high, stidx".split(",") ##adl
@@ -162,7 +177,7 @@ def load_kth_data(f_name, data_path, image_size, K, T):
             pprint(x) ##adl
             pass ##adl
         print("------------------------\n") ##adl
-        
+    """
     
     
     for t in range(K + T):
@@ -191,7 +206,7 @@ def load_s1m_data(f_name, data_path, trainlist, K, T):
         try:
             vid = imageio.get_reader(vid_path, "ffmpeg")
             low = 1
-            high = vid.get_length() - K - T + 1
+            high = vid.count_frames() - K - T + 1
             if low == high:
                 stidx = 0
             else:
