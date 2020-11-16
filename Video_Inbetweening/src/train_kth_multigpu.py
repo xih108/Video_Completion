@@ -78,7 +78,6 @@ def train(lr, batch_size, alpha, beta, image_size, K, T, num_iter, gpu):
         margin = 0.3
         updateD = True
         updateG = True
-        iters = 0
 
         gpu_prefix = ""
         for gpu_id in gpu:
@@ -206,11 +205,15 @@ def train(lr, batch_size, alpha, beta, image_size, K, T, num_iter, gpu):
         config.gpu_options.allow_growth = True
         with tf.Session(config=config) as sess:
             tf.global_variables_initializer().run()
+            
+            is_load, iters = model.load(sess, checkpoint_dir)
 
-            if model.load(sess, checkpoint_dir):
+            if is_load:
                 print(" [*] Load SUCCESS")
+                iters = int(''.join(c for c in iters if c.isdigit()))
             else:
                 print(" [!] Load failed...")
+                iters = 0
 
             writer = tf.summary.FileWriter(summary_dir, sess.graph)
 

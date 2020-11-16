@@ -117,7 +117,7 @@ def load_data(f_name, data_path, image_size, K, T, data_name='KTH'):
                 high = vid.count_frames() - K - T + 1
                 break
             except:
-                print(f"Could not get number of frames: {i}")
+                print(f"Could not get number of frames: Retrying {i}")
 
 
     # vid = imageio.get_reader(vid_path, "ffmpeg")
@@ -128,7 +128,7 @@ def load_data(f_name, data_path, image_size, K, T, data_name='KTH'):
         stidx = np.random.randint(low=low, high=high)
     seq = np.zeros((image_size, image_size, K + T, 1), dtype="float32")
 
-    
+    """
     print("-------print vid_path------") ##adl
     import alog ##adl
     from pprint import pprint ##adl
@@ -142,7 +142,6 @@ def load_data(f_name, data_path, image_size, K, T, data_name='KTH'):
     else: ##adl
         pprint(vid_path) ##adl
     print("------------------------\n") ##adl
-    
     
     print("-------print vid.count_frames()------") ##adl
     import alog ##adl
@@ -158,7 +157,6 @@ def load_data(f_name, data_path, image_size, K, T, data_name='KTH'):
         pprint(vid.count_frames()) ##adl
     print("------------------------\n") ##adl
     
-    """
     var_list = [low, high, stidx] ##adl
     for idx,x in enumerate(var_list): ##adl
         var_names = "low, high, stidx".split(",") ##adl
@@ -178,7 +176,6 @@ def load_data(f_name, data_path, image_size, K, T, data_name='KTH'):
             pass ##adl
         print("------------------------\n") ##adl
     """
-    
     
     for t in range(K + T):
         img = cv2.cvtColor(cv2.resize(vid.get_data(stidx + t),
