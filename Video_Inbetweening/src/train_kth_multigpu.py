@@ -329,7 +329,7 @@ def train(lr, batch_size, alpha, beta, image_size, K, T, num_iter, gpu):
                                 
                                 print("Saving....................")
 
-                                savedir = "../results/images/KTH/" + prefix + "/" + str(counter)
+                                savedir = "../results/images/eruption/" + prefix + "/" + str(counter)
                                 import os
                                 if not os.path.exists(savedir):
                                     os.makedirs(savedir)

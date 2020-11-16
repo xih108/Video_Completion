@@ -4,4 +4,5 @@ models/
 results/
 data/
 venv/
+tests/
 *.avi
