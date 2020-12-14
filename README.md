@@ -131,5 +131,25 @@ Run `Project_WGAN` ipynb to
 * Predict all keypoints and jacobians given the keypoints and jacobians from test videos
 * Plot the D and G cost curves.
 
+### Autoregressive
+
+Run `AutoBiGRU_model` ipynb to 
+* Train an autoregressive generative motion model given the keypoints and jacobians from train videos
+* Predict all keypoints and jacobians given the keypoints and jacobians from test videos
+* Plot learning curve with training loss.
+
+
+
+### Evaluation Metrics
+
+### L2 Distance
+
+Call function L2Difference in `utils.py` to
+* Evaluate the L2 distance between two video frame sequences
+
+### FVD
+
+Call function fvd.calculate_fvd in `frechet_video_distance.py` to
+* Evaluate the FVD between two video frame sequences
 
 
